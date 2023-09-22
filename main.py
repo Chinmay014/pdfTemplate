@@ -2,6 +2,8 @@ import fpdf
 import pandas as pd
 
 pdf = fpdf.FPDF(orientation="portrait",unit="mm",format="A4")
+
+# output.pdf
 pdf.set_auto_page_break(auto=False, margin=0)
 
 df = pd.read_csv("topics.csv")
@@ -33,3 +35,45 @@ for index,row in df.iterrows():
 # pdf.cell(w=20,h=12,txt="Hi",border=1,align="L",ln=1)
 
 pdf.output("result.pdf")
+
+# result_lined.pdf
+pdf = fpdf.FPDF(orientation="portrait",unit="mm",format="A4")
+pdf.set_auto_page_break(auto=False, margin=0)
+
+# df = pd.read_csv("topics.csv")
+
+for index,row in df.iterrows():
+    pdf.add_page()
+    pdf.set_font(family="arial",size=24,style="B")
+    pdf.set_text_color(100,100,100)
+    pdf.cell(w=0,h=12,txt=row["Topic"],border=0,align="L",ln=1)
+    pdf.line(10,20,pdf.w-10,20)
+    
+    # add lines
+    for i in range(30,int(pdf.h),10):
+        pdf.line(10,i,pdf.w-10,i)
+
+    # Footer
+    pdf.ln(pdf.h-30)
+    pdf.set_font(family="arial",size=8,style="I")
+    pdf.set_text_color(100,100,100)
+    pdf.cell(w=0,h=12,txt=row["Topic"],border=0,align="R",ln=1)
+
+    for i in range(row["Pages"]-1):
+        pdf.add_page()
+
+        # add lines
+        for i in range(0,int(pdf.h),10):
+            pdf.line(10,i,pdf.w-10,i)
+
+        # Footer
+        pdf.ln(pdf.h-30+12)
+        pdf.set_font(family="arial",size=8,style="I")
+        pdf.set_text_color(100,100,100)
+        pdf.cell(w=0,h=12,txt=row["Topic"],border=0,align="R",ln=1)
+
+# pdf.add_page()
+# pdf.set_font(family="arial",size=12,style="B")
+# pdf.cell(w=20,h=12,txt="Hi",border=1,align="L",ln=1)
+
+pdf.output("result_lined.pdf")
